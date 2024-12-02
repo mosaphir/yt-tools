@@ -12,15 +12,25 @@ import {
   useTheme,
   useMediaQuery,
 } from '@mui/material';
-import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import Layout from '../../components/Layout';
 import codeSnippets from '../../data/codes';
 
+// Dynamic imports for SyntaxHighlighter and styles to prevent SSR issues
+const SyntaxHighlighter = dynamic(() =>
+  import('react-syntax-highlighter').then((mod) => mod.Light),
+  { ssr: false }
+);
+
+const atomOneDark = dynamic(() =>
+  import('react-syntax-highlighter/dist/cjs/styles/hljs').then((mod) => mod.atomOneDark),
+  { ssr: false }
+);
+
 export default function CodingTypingSpeed() {
   const [selectedLanguage, setSelectedLanguage] = useState('JavaScript');
-  const [snippet, setSnippet] = useState(codeSnippets['JavaScript']);
+  const [snippet, setSnippet] = useState(codeSnippets['JavaScript'] || '');
   const [typedCode, setTypedCode] = useState('');
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -31,7 +41,7 @@ export default function CodingTypingSpeed() {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    setSnippet(codeSnippets[selectedLanguage]);
+    setSnippet(codeSnippets[selectedLanguage] || 'No snippet available.');
     resetTest();
   }, [selectedLanguage]);
 
@@ -74,6 +84,13 @@ export default function CodingTypingSpeed() {
     setEndTime(null);
     setAccuracy(0);
     setWpm(0);
+  };
+
+  const handleTyping = (e) => {
+    const value = e.target.value;
+    if (value.length <= snippet.length) {
+      setTypedCode(value);
+    }
   };
 
   const progress = Math.min(
@@ -142,7 +159,7 @@ export default function CodingTypingSpeed() {
               rows={6}
               fullWidth
               value={typedCode}
-              onChange={(e) => setTypedCode(e.target.value)}
+              onChange={handleTyping}
               disabled={!startTime || endTime}
               sx={{ mt: 2 }}
             />
