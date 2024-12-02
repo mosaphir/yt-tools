@@ -1,7 +1,12 @@
-import { AppBar, Toolbar, Typography, Container, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Switch, Container, Box } from '@mui/material';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import { useTheme } from '../components/ThemeProvider';
 import Link from 'next/link';
 
 export default function Layout({ children }) {
+  const { darkMode, toggleDarkMode } = useTheme();
+
   return (
     <Box>
       <AppBar position="static">
@@ -11,6 +16,10 @@ export default function Layout({ children }) {
               Next.js Tools
             </Link>
           </Typography>
+          <IconButton onClick={toggleDarkMode} color="inherit">
+            {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
+          </IconButton>
+          <Switch checked={darkMode} onChange={toggleDarkMode} />
         </Toolbar>
       </AppBar>
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
