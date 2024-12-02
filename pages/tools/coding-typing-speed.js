@@ -23,8 +23,8 @@ const SyntaxHighlighter = dynamic(() =>
   { ssr: false }
 );
 
-const atomOneDark = dynamic(() =>
-  import('react-syntax-highlighter/dist/cjs/styles/hljs').then((mod) => mod.atomOneDark),
+const dracula = dynamic(() =>
+  import('react-syntax-highlighter/dist/cjs/styles/hljs').then((mod) => mod.dracula),
   { ssr: false }
 );
 
@@ -110,7 +110,7 @@ export default function CodingTypingSpeed() {
 
       <Grid container spacing={4} sx={{ padding: isSmallScreen ? 2 : 4 }}>
         <Grid item xs={12}>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
             Coding Typing Speed Test
           </Typography>
           <Typography variant="body1" gutterBottom>
@@ -138,11 +138,18 @@ export default function CodingTypingSpeed() {
         {/* Snippet Display */}
         <Grid item xs={12}>
           <Paper elevation={3} sx={{ padding: 3, backgroundColor: theme.palette.background.paper }}>
-            <Typography variant="h6">Code Snippet:</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Code Snippet:</Typography>
             <SyntaxHighlighter
               language={selectedLanguage.toLowerCase()}
-              style={atomOneDark}
-              customStyle={{ borderRadius: 5, padding: '10px', overflowX: 'auto' }}
+              style={dracula}
+              customStyle={{
+                borderRadius: 5,
+                padding: '20px',
+                overflowX: 'auto',
+                fontSize: '1rem',
+                backgroundColor: theme.palette.background.paper,
+                border: `1px solid ${theme.palette.divider}`,
+              }}
             >
               {snippet}
             </SyntaxHighlighter>
@@ -161,7 +168,12 @@ export default function CodingTypingSpeed() {
               value={typedCode}
               onChange={handleTyping}
               disabled={!startTime || endTime}
-              sx={{ mt: 2 }}
+              sx={{
+                mt: 2,
+                fontFamily: 'monospace',
+                borderRadius: '8px',
+                padding: '8px',
+              }}
             />
             <LinearProgress
               variant="determinate"
@@ -176,6 +188,10 @@ export default function CodingTypingSpeed() {
                 color="primary"
                 onClick={handleStartTest}
                 disabled={startTime && !endTime}
+                sx={{
+                  padding: '8px 16px',
+                  fontWeight: 'bold',
+                }}
               >
                 Start Test
               </Button>
@@ -184,10 +200,21 @@ export default function CodingTypingSpeed() {
                 color="secondary"
                 onClick={handleEndTest}
                 disabled={!startTime || endTime}
+                sx={{
+                  padding: '8px 16px',
+                  fontWeight: 'bold',
+                }}
               >
                 End Test
               </Button>
-              <Button variant="outlined" onClick={resetTest}>
+              <Button
+                variant="outlined"
+                onClick={resetTest}
+                sx={{
+                  padding: '8px 16px',
+                  fontWeight: 'bold',
+                }}
+              >
                 Reset
               </Button>
             </Box>
@@ -198,7 +225,7 @@ export default function CodingTypingSpeed() {
         {endTime && (
           <Grid item xs={12}>
             <Paper elevation={3} sx={{ padding: 3 }}>
-              <Typography variant="h6">Results:</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Results:</Typography>
               <Typography variant="body1">
                 <strong>Accuracy:</strong> {accuracy}%
               </Typography>
