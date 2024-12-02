@@ -14,6 +14,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import HelpIcon from "@mui/icons-material/Help";
 import Layout from "../../components/Layout";
+import Head from "next/head";
 
 export default function Base64Decode() {
   const [input, setInput] = useState("");
@@ -30,14 +31,33 @@ export default function Base64Decode() {
 
   return (
     <Layout>
+      <Head>
+        <title>Base64 Decoder Tool | Decode Base64 Online</title>
+        <meta
+          name="description"
+          content="Use our free Base64 Decoder to decode Base64 encoded strings. Decode your data instantly with an easy-to-use online tool."
+        />
+        <meta
+          name="keywords"
+          content="Base64 decoder, decode Base64, online Base64 decoder, free Base64 decoder tool, decode encoded data, Base64 string"
+        />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="Base64 Decoder Tool" />
+        <meta
+          property="og:description"
+          content="Instantly decode Base64 encoded data using our online tool. Decode any Base64 string with ease."
+        />
+        <meta property="og:type" content="website" />
+      </Head>
+
       <Typography variant="h4" align="center" gutterBottom>
-        Base64 Decoder
+        Base64 Decoder Tool
       </Typography>
 
       {/* Input Section */}
       <Paper elevation={3} sx={{ padding: 4, marginBottom: 4 }}>
         <Typography variant="h6" gutterBottom>
-          Enter Base64 String
+          Enter Base64 String to Decode
         </Typography>
         <TextField
           label="Base64 String"
@@ -77,7 +97,9 @@ export default function Base64Decode() {
         <Typography>
           Base64 is an encoding scheme that represents binary data in an ASCII
           string format by converting it into a radix-64 representation. This tool
-          helps you decode Base64 encoded strings back to their original format.
+          allows you to decode Base64 encoded strings back to their original format.
+          Whether it's text, images, or any other binary data, you can decode it
+          instantly with ease using this free online Base64 decoder.
         </Typography>
       </Paper>
 
@@ -85,13 +107,14 @@ export default function Base64Decode() {
       <Paper elevation={3} sx={{ padding: 4, marginBottom: 4 }}>
         <Box display="flex" alignItems="center" marginBottom={2}>
           <ListAltIcon sx={{ marginRight: 1 }} />
-          <Typography variant="h5">Features</Typography>
+          <Typography variant="h5">Features of Base64 Decoder Tool</Typography>
         </Box>
         <Typography component="ul" sx={{ paddingLeft: 2 }}>
-          <li>Decodes Base64 encoded text into its original format.</li>
-          <li>Supports decoding of various Base64 encoded data types.</li>
-          <li>Simple and intuitive user interface.</li>
-          <li>Responsive design suitable for mobile, tablet, and desktop devices.</li>
+          <li>Instant decoding of Base64 encoded strings.</li>
+          <li>Supports decoding various Base64 encoded data types.</li>
+          <li>Simple and intuitive user interface for fast results.</li>
+          <li>Responsive design optimized for mobile, tablet, and desktop devices.</li>
+          <li>Completely free to use without any registration required.</li>
         </Typography>
       </Paper>
 
@@ -99,7 +122,7 @@ export default function Base64Decode() {
       <Paper elevation={3} sx={{ padding: 4 }}>
         <Box display="flex" alignItems="center" marginBottom={2}>
           <HelpIcon sx={{ marginRight: 1 }} />
-          <Typography variant="h5">FAQ</Typography>
+          <Typography variant="h5">Frequently Asked Questions (FAQ)</Typography>
         </Box>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -107,8 +130,10 @@ export default function Base64Decode() {
           </AccordionSummary>
           <AccordionDetails>
             <Typography>
-              Base64 encoding is a method to convert binary data into ASCII text
-              by encoding it in a special format that uses a 64-character alphabet.
+              Base64 encoding is a method of converting binary data (such as
+              images or files) into an ASCII string format using a 64-character
+              alphabet. It ensures that binary data can be safely transmitted over
+              text-based protocols like email or in URLs.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -118,8 +143,9 @@ export default function Base64Decode() {
           </AccordionSummary>
           <AccordionDetails>
             <Typography>
-              Any type of binary data (such as images, files, or any other binary
-              data) can be Base64 encoded into a string that is ASCII-safe.
+              Base64 encoding can be applied to any type of binary data such as
+              images, files, text, or any other non-text data that needs to be
+              transmitted over text-based protocols.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -129,10 +155,9 @@ export default function Base64Decode() {
           </AccordionSummary>
           <AccordionDetails>
             <Typography>
-              Base64 encoding is commonly used for embedding binary data in text
-              formats like emails, JSON, or URLs. It's especially useful when
-              data needs to be transferred over media that are designed to deal
-              with text.
+              Base64 encoding is often used to safely encode binary data for
+              transfer over systems that handle text. For example, it is widely
+              used in email attachments, URLs, and embedded media in HTML documents.
             </Typography>
           </AccordionDetails>
         </Accordion>
