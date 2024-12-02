@@ -1,7 +1,9 @@
-import '@styles/globals.css'
+import ThemeProvider from '../components/ThemeProvider';
 
-function Application({ Component, pageProps }) {
-  return <Component {...pageProps} />
+export default function MyApp({ Component, pageProps }) {
+  return (
+    <ThemeProvider>
+      <Component {...pageProps} />
+    </ThemeProvider>
+  );
 }
-
-export default Application
