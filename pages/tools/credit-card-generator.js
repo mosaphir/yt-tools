@@ -1,52 +1,47 @@
 import { useState } from 'react';
-import { Typography, Button, TextField, Box, IconButton, Paper, Grid, InputAdornment, useTheme, useMediaQuery } from '@mui/material';
+import { Typography, Button, TextField, Box, IconButton, Paper, Grid, useTheme, useMediaQuery, Accordion, AccordionSummary, AccordionDetails, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
+import { CopyAll as CopyIcon, ExpandMore as ExpandMoreIcon, Info as InfoIcon, Help as HelpIcon } from '@mui/icons-material';
 import Layout from '../../components/Layout';
-import { CopyAll as CopyIcon } from '@mui/icons-material';
 
 export default function CreditCardGenerator() {
   const [generatedCards, setGeneratedCards] = useState([]);
   const [bin, setBin] = useState('');
   const [expiry, setExpiry] = useState('');
   const [quantity, setQuantity] = useState(1);
-
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // Function to generate a valid credit card number using Luhn Algorithm
+  // Function to generate valid credit card number using Luhn Algorithm
   const generateCreditCards = () => {
     const cards = [];
     const currentYear = new Date().getFullYear();
 
     for (let i = 0; i < quantity; i++) {
-      // If BIN is empty, choose a random one from predefined list
       const cardBin = bin || generateRandomBin();
       let cardNumber = cardBin;
 
-      // Generate card number to be 16 digits long
       while (cardNumber.length < 16) {
         cardNumber += Math.floor(Math.random() * 10).toString();
       }
 
-      // Luhn Algorithm Check
       if (isValidLuhn(cardNumber)) {
         const cardExpiry = generateExpiryDate(currentYear);
         const cardCVV = generateCVV();
 
-        // Generate card details
         cards.push({
           cardNumber,
           expiry: cardExpiry,
           cvv: cardCVV,
         });
       } else {
-        i--;
+        i--; // Regenerate if Luhn check fails
       }
     }
 
     setGeneratedCards(cards);
   };
 
-  // Generate a random BIN from a predefined list
+  // Generate a random BIN from predefined list
   const generateRandomBin = () => {
     const prefixes = ['4539', '4556', '4916', '4532', '4929', '40240071', '4485', '4716'];
     return prefixes[Math.floor(Math.random() * prefixes.length)];
@@ -161,6 +156,55 @@ export default function CreditCardGenerator() {
           </Grid>
         ))}
       </Grid>
+
+      {/* About Section */}
+      <Box sx={{ mt: 5 }}>
+        <Typography variant="h5" gutterBottom>
+          About
+        </Typography>
+        <Typography variant="body1">
+          This Credit Card Generator is a tool designed to generate fake credit card details for testing purposes only. These card numbers are randomly generated and do not represent real or valid credit cards.
+        </Typography>
+      </Box>
+
+      {/* FAQ Section */}
+      <Box sx={{ mt: 5 }}>
+        <Typography variant="h5" gutterBottom>
+          Frequently Asked Questions
+        </Typography>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
+            <Typography variant="h6">What is this tool for?</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              This tool is designed to generate fake credit card numbers for testing purposes. It can be used to test payment systems and other applications that require valid-looking credit card numbers.
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2-content" id="panel2-header">
+            <Typography variant="h6">Is this a real credit card?</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              No, the generated cards are not real and cannot be used for any financial transactions. They are only for development and testing purposes.
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3-content" id="panel3-header">
+            <Typography variant="h6">How do I copy the card details?</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              You can click on the copy icon next to the generated card details to copy them to your clipboard.
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+      </Box>
     </Layout>
   );
 }
