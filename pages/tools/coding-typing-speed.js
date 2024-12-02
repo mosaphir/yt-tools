@@ -9,43 +9,14 @@ import {
   Paper,
   Grid,
   LinearProgress,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import Head from 'next/head';
 import Layout from '../../components/Layout';
-
-const codeSnippets = {
-  JavaScript: `function greet(name) {
-  console.log("Hello, " + name + "!");
-}`,
-  Python: `def greet(name):
-    print(f"Hello, {name}!")`,
-  C: `#include <stdio.h>
-void greet(char name[]) {
-    printf("Hello, %s!\\n", name);
-}`,
-  Java: `public class Main {
-    public static void greet(String name) {
-        System.out.println("Hello, " + name + "!");
-    }
-}`,
-  Go: `package main
-import "fmt"
-func greet(name string) {
-    fmt.Printf("Hello, %s\\n", name)
-}`,
-  PHP: `<?php
-function greet($name) {
-    echo "Hello, " . $name . "!";
-}`,
-  Ruby: `def greet(name)
-  puts "Hello, #{name}!"
-end`,
-  Kotlin: `fun greet(name: String) {
-    println("Hello, $name!")
-}`,
-};
+import codeSnippets from '../../data/codes';
 
 export default function CodingTypingSpeed() {
   const [selectedLanguage, setSelectedLanguage] = useState('JavaScript');
@@ -55,6 +26,9 @@ export default function CodingTypingSpeed() {
   const [endTime, setEndTime] = useState(null);
   const [accuracy, setAccuracy] = useState(0);
   const [wpm, setWpm] = useState(0);
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     setSnippet(codeSnippets[selectedLanguage]);
@@ -111,91 +85,113 @@ export default function CodingTypingSpeed() {
     <Layout>
       <Head>
         <title>Coding Typing Speed Test</title>
-        <meta name="description" content="Test your coding typing speed and accuracy in various programming languages." />
+        <meta
+          name="description"
+          content="Test your coding typing speed and accuracy in various programming languages."
+        />
       </Head>
 
-      <Typography variant="h4" gutterBottom>
-        Coding Typing Speed Test
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        Test your coding speed and accuracy in various programming languages.
-      </Typography>
-
-      {/* Language Selection */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h6">Select Language:</Typography>
-        <Select
-          value={selectedLanguage}
-          onChange={(e) => setSelectedLanguage(e.target.value)}
-          fullWidth
-          sx={{ mt: 1 }}
-        >
-          {Object.keys(codeSnippets).map((lang) => (
-            <MenuItem key={lang} value={lang}>
-              {lang}
-            </MenuItem>
-          ))}
-        </Select>
-      </Box>
-
-      {/* Snippet Display */}
-      <Paper elevation={3} sx={{ padding: 3, mb: 3 }}>
-        <Typography variant="h6">Code Snippet:</Typography>
-        <SyntaxHighlighter language={selectedLanguage.toLowerCase()} style={docco}>
-          {snippet}
-        </SyntaxHighlighter>
-      </Paper>
-
-      {/* Typing Area */}
-      <Paper elevation={3} sx={{ padding: 3, mb: 3 }}>
-        <Typography variant="h6">Type the code below:</Typography>
-        <TextField
-          variant="outlined"
-          multiline
-          rows={6}
-          fullWidth
-          value={typedCode}
-          onChange={(e) => setTypedCode(e.target.value)}
-          disabled={!startTime || endTime}
-        />
-        <LinearProgress variant="determinate" value={progress} sx={{ mt: 2, mb: 2 }} />
-        <Typography variant="body2">Progress: {progress}%</Typography>
-
-        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleStartTest}
-            disabled={startTime && !endTime}
-          >
-            Start Test
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleEndTest}
-            disabled={!startTime || endTime}
-          >
-            End Test
-          </Button>
-          <Button variant="outlined" onClick={resetTest}>
-            Reset
-          </Button>
-        </Box>
-      </Paper>
-
-      {/* Results */}
-      {endTime && (
-        <Paper elevation={3} sx={{ padding: 3 }}>
-          <Typography variant="h6">Results:</Typography>
-          <Typography variant="body1">
-            <strong>Accuracy:</strong> {accuracy}%
+      <Grid container spacing={4} sx={{ padding: isSmallScreen ? 2 : 4 }}>
+        <Grid item xs={12}>
+          <Typography variant="h4" gutterBottom>
+            Coding Typing Speed Test
           </Typography>
-          <Typography variant="body1">
-            <strong>Typing Speed:</strong> {wpm} WPM
+          <Typography variant="body1" gutterBottom>
+            Test your coding speed and accuracy in various programming languages.
           </Typography>
-        </Paper>
-      )}
+        </Grid>
+
+        {/* Language Selection */}
+        <Grid item xs={12} md={6}>
+          <Typography variant="h6">Select Language:</Typography>
+          <Select
+            value={selectedLanguage}
+            onChange={(e) => setSelectedLanguage(e.target.value)}
+            fullWidth
+            sx={{ mt: 1 }}
+          >
+            {Object.keys(codeSnippets).map((lang) => (
+              <MenuItem key={lang} value={lang}>
+                {lang}
+              </MenuItem>
+            ))}
+          </Select>
+        </Grid>
+
+        {/* Snippet Display */}
+        <Grid item xs={12}>
+          <Paper elevation={3} sx={{ padding: 3, backgroundColor: theme.palette.background.paper }}>
+            <Typography variant="h6">Code Snippet:</Typography>
+            <SyntaxHighlighter
+              language={selectedLanguage.toLowerCase()}
+              style={atomOneDark}
+              customStyle={{ borderRadius: 5, padding: '10px', overflowX: 'auto' }}
+            >
+              {snippet}
+            </SyntaxHighlighter>
+          </Paper>
+        </Grid>
+
+        {/* Typing Area */}
+        <Grid item xs={12}>
+          <Paper elevation={3} sx={{ padding: 3 }}>
+            <Typography variant="h6">Type the code below:</Typography>
+            <TextField
+              variant="outlined"
+              multiline
+              rows={6}
+              fullWidth
+              value={typedCode}
+              onChange={(e) => setTypedCode(e.target.value)}
+              disabled={!startTime || endTime}
+              sx={{ mt: 2 }}
+            />
+            <LinearProgress
+              variant="determinate"
+              value={progress}
+              sx={{ mt: 2, mb: 2 }}
+            />
+            <Typography variant="body2">Progress: {progress}%</Typography>
+
+            <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleStartTest}
+                disabled={startTime && !endTime}
+              >
+                Start Test
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleEndTest}
+                disabled={!startTime || endTime}
+              >
+                End Test
+              </Button>
+              <Button variant="outlined" onClick={resetTest}>
+                Reset
+              </Button>
+            </Box>
+          </Paper>
+        </Grid>
+
+        {/* Results */}
+        {endTime && (
+          <Grid item xs={12}>
+            <Paper elevation={3} sx={{ padding: 3 }}>
+              <Typography variant="h6">Results:</Typography>
+              <Typography variant="body1">
+                <strong>Accuracy:</strong> {accuracy}%
+              </Typography>
+              <Typography variant="body1">
+                <strong>Typing Speed:</strong> {wpm} WPM
+              </Typography>
+            </Paper>
+          </Grid>
+        )}
+      </Grid>
     </Layout>
   );
 }
