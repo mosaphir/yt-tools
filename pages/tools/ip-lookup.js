@@ -11,7 +11,7 @@ export default function IPLookup() {
     setError('');
     setData(null);
     try {
-      const response = await fetch(`https://ipinfo.io/${ip}/json?token=your_token_here`);
+      const response = await fetch(`https://ipinfo.io/${ip}/json?token=b4ee7887bee0db`);
       const result = await response.json();
       if (result.error) {
         setError(result.error.message);
