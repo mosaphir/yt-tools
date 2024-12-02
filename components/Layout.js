@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Typography, IconButton, Switch, Container, Box, Grid } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Switch, Container, Box, Grid, Divider } from '@mui/material';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { useTheme } from '../components/ThemeProvider';
@@ -10,10 +10,10 @@ export default function Layout({ children }) {
   return (
     <Box sx={{ bgcolor: darkMode ? 'background.default' : 'background.paper', minHeight: '100vh' }}>
       {/* Header Section */}
-      <AppBar position="sticky" color={darkMode ? 'primary' : 'transparent'} elevation={3}>
+      <AppBar position="static" color={darkMode ? 'primary' : 'transparent'} elevation={3}>
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+            <Link href="/" passHref>
               <Typography variant="h6" color="inherit" sx={{ fontWeight: 'bold' }}>
                 Next.js Tools
               </Typography>
@@ -49,6 +49,7 @@ export default function Layout({ children }) {
 
       {/* Footer Section */}
       <Box component="footer" sx={{ textAlign: 'center', py: 4, bgcolor: darkMode ? '#121212' : '#f0f0f0' }}>
+        <Divider sx={{ bgcolor: darkMode ? 'text.secondary' : 'text.primary', mb: 2 }} />
         <Typography variant="body2" color={darkMode ? 'text.secondary' : 'text.primary'}>
           &copy; 2024 Next.js Tools. All rights reserved.
         </Typography>
