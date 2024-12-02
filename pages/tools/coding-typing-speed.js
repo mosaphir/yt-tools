@@ -7,12 +7,13 @@ import {
   Box,
   TextField,
   Paper,
-  LinearProgress,
   Grid,
+  LinearProgress,
 } from '@mui/material';
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import Head from 'next/head';
 import Layout from '../../components/Layout';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { materialOceanic } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const codeSnippets = {
   JavaScript: `function greet(name) {
@@ -34,12 +35,15 @@ import "fmt"
 func greet(name string) {
     fmt.Printf("Hello, %s\\n", name)
 }`,
+  PHP: `<?php
+function greet($name) {
+    echo "Hello, " . $name . "!";
+}`,
   Ruby: `def greet(name)
   puts "Hello, #{name}!"
 end`,
-  PHP: `<?php
-function greet($name) {
-    echo "Hello, $name!";
+  Kotlin: `fun greet(name: String) {
+    println("Hello, $name!")
 }`,
 };
 
@@ -51,20 +55,11 @@ export default function CodingTypingSpeed() {
   const [endTime, setEndTime] = useState(null);
   const [accuracy, setAccuracy] = useState(0);
   const [wpm, setWpm] = useState(0);
-  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     setSnippet(codeSnippets[selectedLanguage]);
     resetTest();
   }, [selectedLanguage]);
-
-  useEffect(() => {
-    if (typedCode.length > 0) {
-      setProgress(
-        Math.min((typedCode.length / snippet.length) * 100, 100).toFixed(2)
-      );
-    }
-  }, [typedCode, snippet]);
 
   const calculateAccuracy = () => {
     const snippetLength = snippet.length;
@@ -90,7 +85,6 @@ export default function CodingTypingSpeed() {
     setEndTime(null);
     setAccuracy(0);
     setWpm(0);
-    setProgress(0);
   };
 
   const handleEndTest = () => {
@@ -106,11 +100,20 @@ export default function CodingTypingSpeed() {
     setEndTime(null);
     setAccuracy(0);
     setWpm(0);
-    setProgress(0);
   };
+
+  const progress = Math.min(
+    (typedCode.length / snippet.length) * 100,
+    100
+  ).toFixed(2);
 
   return (
     <Layout>
+      <Head>
+        <title>Coding Typing Speed Test</title>
+        <meta name="description" content="Test your coding typing speed and accuracy in various programming languages." />
+      </Head>
+
       <Typography variant="h4" gutterBottom>
         Coding Typing Speed Test
       </Typography>
@@ -138,11 +141,7 @@ export default function CodingTypingSpeed() {
       {/* Snippet Display */}
       <Paper elevation={3} sx={{ padding: 3, mb: 3 }}>
         <Typography variant="h6">Code Snippet:</Typography>
-        <SyntaxHighlighter
-          language={selectedLanguage.toLowerCase()}
-          style={materialOceanic}
-          showLineNumbers
-        >
+        <SyntaxHighlighter language={selectedLanguage.toLowerCase()} style={docco}>
           {snippet}
         </SyntaxHighlighter>
       </Paper>
@@ -159,11 +158,9 @@ export default function CodingTypingSpeed() {
           onChange={(e) => setTypedCode(e.target.value)}
           disabled={!startTime || endTime}
         />
-        <LinearProgress
-          variant="determinate"
-          value={progress}
-          sx={{ mt: 2 }}
-        />
+        <LinearProgress variant="determinate" value={progress} sx={{ mt: 2, mb: 2 }} />
+        <Typography variant="body2">Progress: {progress}%</Typography>
+
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
           <Button
             variant="contained"
