@@ -1,16 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { 
   Typography, 
   Box, 
   Grid, 
   Container, 
-  Button, 
   Card, 
-  CardContent, 
-  CardActions 
+  CardContent 
 } from '@mui/material';
-import { Info, Devices, BrowserUpdated, CheckCircle } from '@mui/icons-material';
+import { Info, Devices, ScreenSearchDesktop, BrowserUpdated } from '@mui/icons-material';
 import Layout from '../../components/Layout';
 import { 
   browserName, 
@@ -18,28 +16,35 @@ import {
   engineName, 
   mobileVendor, 
   mobileModel, 
-  deviceType 
+  deviceType, 
+  getUA 
 } from 'react-device-detect';
 
 export default function WhatIsMyBrowser() {
-  const [browserInfo, setBrowserInfo] = useState('');
+  const [deviceInfo, setDeviceInfo] = useState({});
 
-  const getBrowserInfo = () => {
-    setBrowserInfo(`
-      Browser: ${browserName}
-      Operating System: ${osName}
-      Engine: ${engineName}
-      Device Type: ${deviceType}
-      Mobile Vendor: ${mobileVendor || 'N/A'}
-      Mobile Model: ${mobileModel || 'N/A'}
-    `);
-  };
+  useEffect(() => {
+    // Collect device information
+    setDeviceInfo({
+      browser: browserName,
+      operatingSystem: osName,
+      engine: engineName,
+      deviceType,
+      mobileVendor: mobileVendor || 'N/A',
+      mobileModel: mobileModel || 'N/A',
+      userAgent: getUA(),
+      screenResolution: `${window.screen.width} x ${window.screen.height}`,
+    });
+  }, []);
 
   return (
     <>
       <Head>
         <title>What Is My Browser</title>
-        <meta name="description" content="Find out detailed information about your browser, operating system, and device using this tool." />
+        <meta 
+          name="description" 
+          content="Find out detailed information about your browser, operating system, and device using this tool." 
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <Layout>
@@ -52,47 +57,25 @@ export default function WhatIsMyBrowser() {
             Discover everything about your browser, operating system, and device.
           </Typography>
 
-          {/* Get Info Section */}
-          <Grid container spacing={4} sx={{ marginY: 4 }}>
-            <Grid item xs={12} md={6}>
-              <Card elevation={4}>
-                <CardContent>
-                  <Typography variant="h5" align="center" gutterBottom>
-                    Get Your Browser Info
-                  </Typography>
-                  <Typography variant="body2" align="center" sx={{ marginBottom: 2 }}>
-                    Click the button below to view details about your browser and device.
-                  </Typography>
-                </CardContent>
-                <CardActions sx={{ justifyContent: 'center' }}>
-                  <Button variant="contained" color="primary" onClick={getBrowserInfo}>
-                    Get Browser Info
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              {browserInfo && (
-                <Card elevation={4}>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      Browser Information:
-                    </Typography>
-                    <pre style={{ whiteSpace: 'pre-wrap' }}>{browserInfo}</pre>
-                  </CardContent>
-                </Card>
-              )}
-            </Grid>
-          </Grid>
-
-          {/* About Section */}
-          <Box sx={{ marginY: 6 }}>
+          {/* Device Information Section */}
+          <Box sx={{ marginY: 4 }}>
             <Typography variant="h4" align="center" gutterBottom>
-              About This Tool
+              Your Device Information
             </Typography>
-            <Typography variant="body1" align="center">
-              This tool helps you identify your browser, operating system, and device details with ease.
-            </Typography>
+            <Grid container spacing={4}>
+              {Object.entries(deviceInfo).map(([key, value]) => (
+                <Grid item xs={12} sm={6} md={4} key={key}>
+                  <Card elevation={3}>
+                    <CardContent>
+                      <Typography variant="h6" gutterBottom>
+                        {key.replace(/([A-Z])/g, ' $1').toUpperCase()}
+                      </Typography>
+                      <Typography variant="body2">{value}</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
           </Box>
 
           {/* Features Section */}
@@ -107,7 +90,7 @@ export default function WhatIsMyBrowser() {
                     <BrowserUpdated fontSize="large" color="primary" />
                     <Typography variant="h6">Browser Detection</Typography>
                     <Typography variant="body2">
-                      Detects your browser name and engine accurately.
+                      Accurately detects your browser and rendering engine.
                     </Typography>
                   </CardContent>
                 </Card>
@@ -118,7 +101,18 @@ export default function WhatIsMyBrowser() {
                     <Devices fontSize="large" color="primary" />
                     <Typography variant="h6">Device Info</Typography>
                     <Typography variant="body2">
-                      Identifies your device type and model.
+                      Provides detailed information about your device type, vendor, and model.
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <Card elevation={3}>
+                  <CardContent>
+                    <ScreenSearchDesktop fontSize="large" color="primary" />
+                    <Typography variant="h6">Screen Resolution</Typography>
+                    <Typography variant="body2">
+                      Displays your screen dimensions for responsive optimization.
                     </Typography>
                   </CardContent>
                 </Card>
@@ -127,20 +121,9 @@ export default function WhatIsMyBrowser() {
                 <Card elevation={3}>
                   <CardContent>
                     <Info fontSize="large" color="primary" />
-                    <Typography variant="h6">OS Identification</Typography>
+                    <Typography variant="h6">User Agent</Typography>
                     <Typography variant="body2">
-                      Provides details about your operating system.
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Card elevation={3}>
-                  <CardContent>
-                    <CheckCircle fontSize="large" color="primary" />
-                    <Typography variant="h6">Responsive Design</Typography>
-                    <Typography variant="body2">
-                      Optimized for all devices and screen sizes.
+                      Displays your browser's user agent string.
                     </Typography>
                   </CardContent>
                 </Card>
@@ -159,7 +142,7 @@ export default function WhatIsMyBrowser() {
                   <CardContent>
                     <Typography variant="h6">What does this tool do?</Typography>
                     <Typography variant="body2">
-                      It provides detailed insights about your browser, operating system, and device.
+                      This tool detects and displays detailed information about your browser, operating system, and device.
                     </Typography>
                   </CardContent>
                 </Card>
@@ -169,7 +152,7 @@ export default function WhatIsMyBrowser() {
                   <CardContent>
                     <Typography variant="h6">Is the information accurate?</Typography>
                     <Typography variant="body2">
-                      Yes, the tool leverages reliable libraries for accurate detection.
+                      Yes, the tool leverages reliable libraries like `react-device-detect` for precise detection.
                     </Typography>
                   </CardContent>
                 </Card>
