@@ -27,6 +27,14 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import GTranslateIcon from '@mui/icons-material/GTranslate';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
+import ReorderIcon from '@mui/icons-material/Reorder';
+import RepeatIcon from '@mui/icons-material/Repeat';
+import PolicyIcon from '@mui/icons-material/Policy';
+import GavelIcon from '@mui/icons-material/Gavel';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import UuidIcon from '@mui/icons-material/Fingerprint';
+import HtmlIcon from '@mui/icons-material/Html';
+import SpeedIcon from '@mui/icons-material/Speed';
 
 const tools = [
   { name: 'MD5 Generator', link: '/tools/md5-generator', description: 'Generate MD5 hashes from text.', icon: <SecurityIcon /> },
@@ -66,6 +74,16 @@ const tools = [
   { name: 'Whois', link: '/tools/whois', description: 'Lookup domain registration details and more.', icon: <InsertDriveFileIcon /> },
   { name: 'Word Counter', link: '/tools/word-counter', description: 'Count the number of words in a text.', icon: <TextFieldsIcon /> },
   { name: 'YouTube Thumbnail Downloader', link: '/tools/youtube-thumbnail-downloader', description: 'Download thumbnails from YouTube videos.', icon: <YouTubeIcon /> },
+  { name: 'YouTube Channel ID Finder', link: '/tools/youtube-channel-id', description: 'Find YouTube channel IDs by username or link.', icon: <YouTubeIcon /> },
+  { name: 'Text Sorter', link: '/tools/text-sorter', description: 'Sort text alphabetically or by other criteria.', icon: <ReorderIcon /> },
+  { name: 'Text Repeater', link: '/tools/text-repeater', description: 'Repeat text a specified number of times.', icon: <RepeatIcon /> },
+  { name: 'Disclaimer Generator', link: '/tools/disclaimer-generator', description: 'Generate a professional disclaimer for websites or projects.', icon: <PolicyIcon /> },
+  { name: 'Terms and Conditions Generator', link: '/tools/terms-and-condition-generator', description: 'Create terms and conditions for websites or apps.', icon: <GavelIcon /> },
+  { name: 'Privacy Policy Generator', link: '/tools/privacy-policy-generator', description: 'Generate a privacy policy tailored to your needs.', icon: <PolicyIcon /> },
+  { name: 'Credit Card Generator', link: '/tools/credit-card-generator', description: 'Generate random, valid credit card numbers for testing purposes.', icon: <CreditCardIcon /> },
+  { name: 'UUID Generator', link: '/tools/uuid-generator', description: 'Generate unique UUIDs.', icon: <UuidIcon /> },
+  { name: 'Markdown to HTML', link: '/tools/md-to-html', description: 'Convert Markdown content into HTML.', icon: <HtmlIcon /> },
+  { name: 'Coding Typing Speed Test', link: '/tools/coding-typing-speed', description: 'Test your typing speed with coding challenges.', icon: <SpeedIcon /> },
 ];
 
 export default tools;
