@@ -1,27 +1,34 @@
 import { useEffect, useState } from 'react';
-import { 
-  Typography, 
-  Box, 
-  CircularProgress, 
-  Button, 
-  Grid, 
-  Card, 
-  CardContent 
+import Head from 'next/head';
+import {
+  Typography,
+  Box,
+  CircularProgress,
+  Button,
+  Grid,
+  Card,
+  CardContent,
+  Tooltip,
+  IconButton,
 } from '@mui/material';
-import { 
-  Public, 
-  LocationOn, 
-  Refresh, 
-  Info, 
-  CheckCircle 
+import {
+  Public,
+  LocationOn,
+  Refresh,
+  Info,
+  CheckCircle,
+  CopyAll,
+  Devices,
 } from '@mui/icons-material';
 import Layout from '../../components/Layout';
 
 export default function WhatIsMyIP() {
   const [ipData, setIPData] = useState({});
+  const [browserData, setBrowserData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  // Fetch IP and Location Details
   const fetchIPDetails = async () => {
     setLoading(true);
     setError(false);
@@ -36,12 +43,54 @@ export default function WhatIsMyIP() {
     }
   };
 
+  // Get Browser Details
+  const fetchBrowserDetails = () => {
+    setBrowserData({
+      browser: navigator.userAgent,
+      platform: navigator.platform,
+    });
+  };
+
+  // Copy IP to Clipboard
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(ipData.ip || 'N/A');
+    alert('IP Address copied to clipboard!');
+  };
+
   useEffect(() => {
     fetchIPDetails();
+    fetchBrowserDetails();
   }, []);
 
   return (
     <>
+      <Head>
+        <title>What Is My IP? | IP Address and Location Finder</title>
+        <meta
+          name="description"
+          content="Discover your public IP address, location details, and browser information with our simple and reliable tool."
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta property="og:title" content="What Is My IP? | IP Address and Location Finder" />
+        <meta property="og:description" content="Find your public IP address, location details, and browser info easily." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://yourwebsite.com/what-is-my-ip" />
+        <meta property="og:image" content="https://yourwebsite.com/ip-tool-banner.png" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebPage",
+              name: "What Is My IP?",
+              description:
+                "Discover your public IP address, location details, and browser information with our simple and reliable tool.",
+              url: "https://yourwebsite.com/what-is-my-ip",
+            }),
+          }}
+        />
+      </Head>
+
       <Layout>
         <Box sx={{ maxWidth: '800px', margin: '0 auto', padding: 4 }}>
           {/* Header */}
@@ -49,7 +98,7 @@ export default function WhatIsMyIP() {
             What Is My IP?
           </Typography>
           <Typography variant="subtitle1" align="center" gutterBottom>
-            Quickly find your public IP address and location information.
+            Quickly find your public IP address, location, and browser details.
           </Typography>
 
           {/* IP Display Section */}
@@ -59,12 +108,12 @@ export default function WhatIsMyIP() {
             ) : error ? (
               <>
                 <Typography variant="h6" color="error" gutterBottom>
-                  Unable to fetch IP details. Please try again.
+                  Unable to fetch IP details. Please check your internet connection and try again.
                 </Typography>
-                <Button 
-                  variant="contained" 
-                  color="primary" 
-                  onClick={fetchIPDetails} 
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={fetchIPDetails}
                   startIcon={<Refresh />}
                 >
                   Retry
@@ -75,16 +124,21 @@ export default function WhatIsMyIP() {
                 <Typography variant="h4" gutterBottom>
                   Your IP: {ipData.ip || 'N/A'}
                 </Typography>
+                <Tooltip title="Copy to Clipboard">
+                  <IconButton onClick={copyToClipboard}>
+                    <CopyAll />
+                  </IconButton>
+                </Tooltip>
                 <Typography variant="h6" gutterBottom>
                   Location: {ipData.city || 'N/A'}, {ipData.region || 'N/A'}, {ipData.country_name || 'N/A'}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                   ISP: {ipData.org || 'N/A'}
                 </Typography>
-                <Button 
-                  variant="outlined" 
-                  color="primary" 
-                  onClick={fetchIPDetails} 
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={fetchIPDetails}
                   startIcon={<Refresh />}
                   sx={{ mt: 2 }}
                 >
@@ -94,14 +148,33 @@ export default function WhatIsMyIP() {
             )}
           </Box>
 
+          {/* Browser Details Section */}
+          <Box sx={{ textAlign: 'center', mt: 6 }}>
+            <Card>
+              <CardContent>
+                <Devices color="primary" fontSize="large" />
+                <Typography variant="h6" gutterBottom>
+                  Browser & OS Details
+                </Typography>
+                <Typography variant="body2">
+                  Browser: {browserData.browser || 'N/A'}
+                </Typography>
+                <Typography variant="body2">
+                  Platform: {browserData.platform || 'N/A'}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Box>
+
           {/* About Section */}
           <Box sx={{ backgroundColor: '#f5f5f5', padding: 4, marginTop: 6 }}>
             <Typography variant="h4" align="center" gutterBottom>
               About This Tool
             </Typography>
             <Typography variant="body1" align="center">
-              This tool allows you to instantly find your public IP address and additional information like location and ISP. 
-              It's useful for troubleshooting connectivity, verifying location-based access, and more.
+              This tool allows you to instantly find your public IP address and additional information
+              like location and browser details. It's perfect for network troubleshooting and
+              verifying location-based access.
             </Typography>
           </Box>
 
@@ -140,48 +213,15 @@ export default function WhatIsMyIP() {
               <Grid item xs={12} sm={6} md={4}>
                 <Card>
                   <CardContent>
-                    <CheckCircle color="primary" fontSize="large" />
+                    <Devices color="primary" fontSize="large" />
                     <Typography variant="h6" align="center">
-                      Reliable Data
+                      Browser Info
                     </Typography>
                     <Typography variant="body2" align="center">
-                      Data is fetched from trusted APIs for accuracy.
+                      See your browser and platform details.
                     </Typography>
                   </CardContent>
                 </Card>
-              </Grid>
-            </Grid>
-          </Box>
-
-          {/* How It Works Section */}
-          <Box sx={{ backgroundColor: '#f5f5f5', padding: 4, marginTop: 6 }}>
-            <Typography variant="h4" align="center" gutterBottom>
-              How It Works
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
-                <Typography variant="h6" align="center">
-                  1. Fetch IP
-                </Typography>
-                <Typography variant="body2" align="center">
-                  The tool queries your IP address using a trusted API.
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Typography variant="h6" align="center">
-                  2. Display Details
-                </Typography>
-                <Typography variant="body2" align="center">
-                  Displays your IP address, location, and ISP details.
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Typography variant="h6" align="center">
-                  3. Refresh Anytime
-                </Typography>
-                <Typography variant="body2" align="center">
-                  Easily refresh the data to ensure it’s up-to-date.
-                </Typography>
               </Grid>
             </Grid>
           </Box>
